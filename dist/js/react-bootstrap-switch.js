@@ -1,5 +1,5 @@
 /* ========================================================================
- * react-bootstrap-switch - v3.4.4
+ * react-bootstrap-switch - v3.4.6
  * https://github.com/Julusian/react-bootstrap-switch
  * ========================================================================
  * Copyright 2012-2015 Julian Waller
@@ -319,6 +319,7 @@
       $label = $(this.refs.label);
       return $label.on({
         "click": function(e) {
+          e.preventDefault();
           return e.stopPropagation();
         },
         "mousedown.bootstrapSwitch touchstart.bootstrapSwitch": (function(_this) {
@@ -326,7 +327,6 @@
             if (_this.state.dragStart || _this.state.disabled || _this.state.readonly) {
               return;
             }
-            e.preventDefault();
             e.stopPropagation();
             _this.setState({
               indeterminate: false,

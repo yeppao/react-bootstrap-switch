@@ -248,12 +248,12 @@ module.exports = React.createClass
     $label = $(@refs.label)
     $label.on
       "click": (e) ->
+        e.preventDefault()
         e.stopPropagation()
 
       "mousedown.bootstrapSwitch touchstart.bootstrapSwitch": (e) =>
         return  if @state.dragStart or @state.disabled or @state.readonly
 
-        e.preventDefault()
         e.stopPropagation()
 
         @setState
