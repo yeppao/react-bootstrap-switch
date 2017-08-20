@@ -24,6 +24,7 @@ export default class Switch extends React.Component {
 
   componentWillReceiveProps(nextProps){
     const newValue = nextProps.value !== undefined ? nextProps.value : this.state.value;
+    const oldValue = this.state.value;
 
     // ensure width is updated
     this.setState({
@@ -31,7 +32,7 @@ export default class Switch extends React.Component {
       handleWidth: nextProps.handleWidth,
       value: newValue
     }, () => {
-      this._recalculateWidth(nextProps.value !== undefined);
+      this._recalculateWidth(newValue == oldValue);
     });
   }
 
@@ -94,7 +95,7 @@ export default class Switch extends React.Component {
     if (id)
       classes.push(baseClass + "-" + id);
 
-    if (animate && !dragStart & !skipAnimation)
+    if (animate && !dragStart && !skipAnimation)
       classes.push(baseClass + "-animate");
 
     if (focus)
@@ -214,6 +215,36 @@ export default class Switch extends React.Component {
       offset: difference,
       dragged: true
     }); 
+  }
+
+  _handleLabelTouchEnd(){
+    const { dragStart, dragged, offset, handleWidth } = this.state;
+    
+    if(dragStart === undefined || dragStart === null || dragStart === false)
+      return;
+
+    // If the touch ended without motion, then either a mousedown event should fire, or it was a long press and should do nothing
+    if (!dragged || dragged === undefined || dragged === null){
+      this.setState({
+        dragStart: false,
+        dragged: false,
+      });
+      return
+    }
+
+    const { inverse } = this.props;
+    
+    let val = offset > -(handleWidth / 2);
+    val = inverse ? !val : val;
+
+    this.setState({
+      dragStart: false,
+      dragged: false,
+      value: val
+    }, () => {
+      this._updateContainerPosition();
+      this._fireStateChange(val);
+    });
   }
 
   _handleLabelMouseUp(){
@@ -357,7 +388,7 @@ export default class Switch extends React.Component {
 
       onTouchStart: this._handleLabelMouseDown.bind(this),
       onTouchMove:  this._handleLabelMouseMove.bind(this),
-      onTouchEnd:   this._handleLabelMouseUp.bind(this),
+      onTouchEnd:   this._handleLabelTouchEnd.bind(this),
 
       onMouseDown:  this._handleLabelMouseDown.bind(this),
       onMouseMove:  this._handleLabelMouseMove.bind(this),
