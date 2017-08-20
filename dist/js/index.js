@@ -57,6 +57,7 @@ var Switch = function (_React$Component) {
       var _this2 = this;
 
       var newValue = nextProps.value !== undefined ? nextProps.value : this.state.value;
+      var oldValue = this.state.value;
 
       // ensure width is updated
       this.setState({
@@ -64,7 +65,7 @@ var Switch = function (_React$Component) {
         handleWidth: nextProps.handleWidth,
         value: newValue
       }, function () {
-        _this2._recalculateWidth(nextProps.value !== undefined);
+        _this2._recalculateWidth(newValue == oldValue);
       });
     }
   }, {
@@ -119,7 +120,7 @@ var Switch = function (_React$Component) {
 
       if (id) classes.push(baseClass + "-" + id);
 
-      if (animate && !dragStart & !skipAnimation) classes.push(baseClass + "-animate");
+      if (animate && !dragStart && !skipAnimation) classes.push(baseClass + "-animate");
 
       if (focus) classes.push(baseClass + "-focused");
 
@@ -252,8 +253,8 @@ var Switch = function (_React$Component) {
       });
     }
   }, {
-    key: '_handleLabelMouseUp',
-    value: function _handleLabelMouseUp() {
+    key: '_handleLabelTouchEnd',
+    value: function _handleLabelTouchEnd() {
       var _this4 = this;
 
       var _state4 = this.state,
@@ -261,6 +262,44 @@ var Switch = function (_React$Component) {
           dragged = _state4.dragged,
           offset = _state4.offset,
           handleWidth = _state4.handleWidth;
+
+
+      if (dragStart === undefined || dragStart === null || dragStart === false) return;
+
+      // If the touch ended without motion, then either a mousedown event should fire, or it was a long press and should do nothing
+      if (!dragged || dragged === undefined || dragged === null) {
+        this.setState({
+          dragStart: false,
+          dragged: false
+        });
+        return;
+      }
+
+      var inverse = this.props.inverse;
+
+
+      var val = offset > -(handleWidth / 2);
+      val = inverse ? !val : val;
+
+      this.setState({
+        dragStart: false,
+        dragged: false,
+        value: val
+      }, function () {
+        _this4._updateContainerPosition();
+        _this4._fireStateChange(val);
+      });
+    }
+  }, {
+    key: '_handleLabelMouseUp',
+    value: function _handleLabelMouseUp() {
+      var _this5 = this;
+
+      var _state5 = this.state,
+          dragStart = _state5.dragStart,
+          dragged = _state5.dragged,
+          offset = _state5.offset,
+          handleWidth = _state5.handleWidth;
 
       var value = this._getValue();
 
@@ -287,8 +326,8 @@ var Switch = function (_React$Component) {
         dragged: false,
         value: val
       }, function () {
-        _this4._updateContainerPosition();
-        _this4._fireStateChange(val);
+        _this5._updateContainerPosition();
+        _this5._fireStateChange(val);
       });
     }
   }, {
@@ -308,7 +347,7 @@ var Switch = function (_React$Component) {
   }, {
     key: '_setValue',
     value: function _setValue(val) {
-      var _this5 = this;
+      var _this6 = this;
 
       var value = this._getValue();
       if (val === value) return;
@@ -318,21 +357,21 @@ var Switch = function (_React$Component) {
       this.setState({
         value: newValue
       }, function () {
-        _this5._updateContainerPosition();
-        _this5._fireStateChange(newValue);
+        _this6._updateContainerPosition();
+        _this6._fireStateChange(newValue);
       });
     }
   }, {
     key: '_fireStateChange',
     value: function _fireStateChange(newValue) {
-      var _this6 = this;
+      var _this7 = this;
 
       var onChange = this.props.onChange;
 
       if (typeof onChange != "function") return;
 
       setTimeout(function () {
-        return onChange(_this6, newValue);
+        return onChange(_this7, newValue);
       }, 0);
     }
   }, {
@@ -341,10 +380,10 @@ var Switch = function (_React$Component) {
       var _props5 = this.props,
           baseClass = _props5.baseClass,
           inverse = _props5.inverse;
-      var _state5 = this.state,
-          handleWidth = _state5.handleWidth,
-          labelWidth = _state5.labelWidth,
-          offset = _state5.offset;
+      var _state6 = this.state,
+          handleWidth = _state6.handleWidth,
+          labelWidth = _state6.labelWidth,
+          offset = _state6.offset;
 
 
       var onHandle = this._renderOnHandle();
@@ -383,7 +422,7 @@ var Switch = function (_React$Component) {
   }, {
     key: '_renderOnHandle',
     value: function _renderOnHandle() {
-      var _this7 = this;
+      var _this8 = this;
 
       var _props6 = this.props,
           baseClass = _props6.baseClass,
@@ -394,7 +433,7 @@ var Switch = function (_React$Component) {
 
       var params = {
         ref: function ref(e) {
-          return _this7.elmOnHandle = e;
+          return _this8.elmOnHandle = e;
         },
         style: { width: handleWidth },
         className: baseClass + '-handle-on ' + baseClass + '-' + onColor,
@@ -410,7 +449,7 @@ var Switch = function (_React$Component) {
   }, {
     key: '_renderOffHandle',
     value: function _renderOffHandle() {
-      var _this8 = this;
+      var _this9 = this;
 
       var _props7 = this.props,
           baseClass = _props7.baseClass,
@@ -421,7 +460,7 @@ var Switch = function (_React$Component) {
 
       var params = {
         ref: function ref(e) {
-          return _this8.elmOffHandle = e;
+          return _this9.elmOffHandle = e;
         },
         style: { width: handleWidth },
         className: baseClass + '-handle-off ' + baseClass + '-' + offColor,
@@ -437,7 +476,7 @@ var Switch = function (_React$Component) {
   }, {
     key: '_renderLabel',
     value: function _renderLabel() {
-      var _this9 = this;
+      var _this10 = this;
 
       var _props8 = this.props,
           baseClass = _props8.baseClass,
@@ -447,14 +486,14 @@ var Switch = function (_React$Component) {
 
       var params = {
         ref: function ref(e) {
-          return _this9.elmLabel = e;
+          return _this10.elmLabel = e;
         },
         style: { width: labelWidth },
         className: baseClass + '-label',
 
         onTouchStart: this._handleLabelMouseDown.bind(this),
         onTouchMove: this._handleLabelMouseMove.bind(this),
-        onTouchEnd: this._handleLabelMouseUp.bind(this),
+        onTouchEnd: this._handleLabelTouchEnd.bind(this),
 
         onMouseDown: this._handleLabelMouseDown.bind(this),
         onMouseMove: this._handleLabelMouseMove.bind(this),
