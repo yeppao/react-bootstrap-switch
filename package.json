@@ -15,6 +15,7 @@
     "email": "git@julusian.co.uk"
   },
   "main": "dist/js/index.js",
+  "typings": "dist/typings/index.d.ts",
   "peerDependencies": {
     "prop-types": "^15.5.0",
     "react": "^15.5.0",
