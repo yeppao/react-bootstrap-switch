@@ -22,9 +22,9 @@ export interface SwitchPropTypes {
 	readonly?:       boolean;
 
 	tristate?:       boolean;
-	defaultValue?:   boolean;
-	value?:          boolean;
-	onChange:       (component: any, enabled: boolean) => void
+	defaultValue?:   (boolean | null);
+	value?:          (boolean | null);
+	onChange:       (component: any, enabled: boolean | null) => void
 }
 
 export default class Switch extends React.Component<SwitchPropTypes, {}> {
@@ -32,4 +32,5 @@ export default class Switch extends React.Component<SwitchPropTypes, {}> {
     componentDidMount(): void;
     componentWillUnmount(): void;
     render(): JSX.Element;
+    value(newVal?: boolean | null): (boolean | null);
 }

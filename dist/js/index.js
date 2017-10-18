@@ -80,7 +80,9 @@ var Switch = function (_React$Component) {
     value: function value(val) {
       if (val === undefined) return this.state.value;
 
-      this._setValue(val === null ? null : !!val);
+      var newVal = val === null ? null : !!val;
+      this._setValue(newVal);
+      return newVal;
     }
   }, {
     key: '_wrapperClasses',

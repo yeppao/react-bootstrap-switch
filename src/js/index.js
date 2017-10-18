@@ -47,7 +47,9 @@ export default class Switch extends React.Component {
     if(val === undefined)
       return this.state.value;
 
-    this._setValue(val === null ? null : !!val);
+    const newVal = val === null ? null : !!val
+    this._setValue(newVal);
+    return newVal;
   }
 
   _wrapperClasses(){
