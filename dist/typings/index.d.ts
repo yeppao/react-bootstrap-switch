@@ -13,7 +13,7 @@ export interface SwitchPropTypes {
 
 	onText?:         any; // PropTypes.node?,
 	offText?:        any;
-	labelText?:      string;
+	labelText?:      any;
 
 	inverse?:        boolean;
 	animate?:        boolean;

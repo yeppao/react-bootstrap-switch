@@ -447,7 +447,7 @@ Switch.propTypes = {
 
   onText:         PropTypes.node,
   offText:        PropTypes.node,
-  labelText:      PropTypes.string,
+  labelText:      PropTypes.node,
 
   inverse:        PropTypes.bool,
   animate:        PropTypes.bool,
