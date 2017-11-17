@@ -100,7 +100,7 @@ gulp.task('less-bs2', function() {
 
 gulp.task('less', ['less-bs2', 'less-bs3'], ()=>{});
 
-gulp.task('dist', function(){
+gulp.task('dist', ['less'], function(){
     buildFolder("src/js", "dist/js");
 });
 
