@@ -8,6 +8,7 @@ This project is a port of [bootstrap-switch](https://github.com/nostalgiaz/boots
 ## Version Compatability
 | React Version | Switch Version |
 | ------------- | -------------- |
+| v16.x         | v15.x          |
 | v15.x         | v15.x          |
 | v14.x         | v3.4.x         |
 | v13.x         | v3.3.x         |
