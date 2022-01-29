@@ -4,3 +4,5 @@ components
 test.html
 .DS_Store
 .idea
+dist
+
