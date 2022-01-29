@@ -1,5 +1,5 @@
 {
-  "name": "react-bootstrap-switch",
+  "name": "@yeppao/react-bootstrap-switch",
   "description": "Turn checkboxes and radio buttons into toggle switches.",
   "version": "17.0.0",
   "keywords": [
