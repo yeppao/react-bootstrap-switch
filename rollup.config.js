@@ -7,26 +7,20 @@ import { terser } from "rollup-plugin-terser";
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 // eslint-disable-next-line no-undef
-const packageJson = require("./package.json");
+const pkg = require('./package.json');
 
 export default [
   {
-    input: "src/js/index.ts",
+    input: "src/index.ts",
     output: [
       {
-        file: packageJson.main,
-        format: "cjs",
-        sourcemap: true,
+        file: pkg.main,
+        format: 'cjs',
+        name: 'rbs',
       },
       {
-        file: packageJson.module,
-        format: "esm",
-        sourcemap: true,
-      },
-      { 
-        file: "dist/bundle.js",
-        format: "iife",
-        sourcemap: true, 
+        file: pkg.module,
+        format: 'es',
       }
     ],
     plugins: [
@@ -34,17 +28,22 @@ export default [
       resolve(),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
-      postcss(),
+      postcss({ 
+        extract: 'react-bootstrap-switch.css' 
+      }),
       terser(),
     ],
   },
   {
-    input: "src/js/example/index.tsx",
+    input: "src/example/index.tsx",
     output: [
       {
-        file: "dist/example.js",
+        file: "example/bundle.js",
         format: "iife",
-        sourcemap: true
+        globals: {
+          'react': 'React',
+          'react-dom': 'ReactDOM'
+        }
       }
     ],
     plugins: [
@@ -52,14 +51,14 @@ export default [
       resolve(),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
-      postcss(),
+      postcss({ extract: true }),
       terser(),
     ],
   },
   {
-    input: "dist/esm/types/Switch.d.ts",
-    output: [{ file: "dist/index.d.ts", format: "esm" }],
-    plugins: [dts()],
+    input: "dist/types/index.d.ts",
+    output: [{ file: "dist/index.d.ts", format: "es" }],
+    plugins: [dts({ allowJs: true })],
     external: [/\.(css|less|scss)$/],
   },
 ];

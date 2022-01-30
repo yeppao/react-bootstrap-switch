@@ -1,7 +1,4 @@
 # Bootstrap Switch
-[![Dependency Status](https://david-dm.org/yeppao/react-bootstrap-switch.svg?style=flat)](https://david-dm.org/yeppao/react-bootstrap-switch)
-[![devDependency Status](https://david-dm.org/yeppao/react-bootstrap-switch/dev-status.svg?style=flat)](https://david-dm.org/yeppao/react-bootstrap-switch#info=devDependencies)
-[![NPM Version](http://img.shields.io/npm/v/@yeppao/react-bootstrap-switch.svg?style=flat)](https://www.npmjs.org/)
 
 This project is an adaptation of [react-bootstrap-switch](https://github.com/Julusian/react-bootstrap-switch) for use in React.js
 
