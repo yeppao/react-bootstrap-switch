@@ -7,43 +7,21 @@ import { terser } from "rollup-plugin-terser";
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 // eslint-disable-next-line no-undef
-const packageJson = require("./package.json");
+const pkg = require('./package.json');
 
 export default [
   {
-    input: "src/js/index.ts",
+    input: "src/index.ts",
     output: [
       {
-        file: packageJson.main,
-        format: "cjs",
-        sourcemap: true,
+        file: pkg.main,
+        format: 'cjs',
+        name: 'rbs',
+        sourcemap: true
       },
       {
-        file: packageJson.module,
-        format: "esm",
-        sourcemap: true,
-      },
-      { 
-        file: "dist/bundle.js",
-        format: "iife",
-        sourcemap: true, 
-      }
-    ],
-    plugins: [
-      peerDepsExternal(),
-      resolve(),
-      commonjs(),
-      typescript({ tsconfig: "./tsconfig.json" }),
-      postcss(),
-      terser(),
-    ],
-  },
-  {
-    input: "src/js/example/index.tsx",
-    output: [
-      {
-        file: "dist/example.js",
-        format: "iife",
+        file: pkg.module,
+        format: 'es',
         sourcemap: true
       }
     ],
@@ -52,14 +30,38 @@ export default [
       resolve(),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
-      postcss(),
+      postcss({ 
+        extract: 'react-bootstrap-switch.css' 
+      }),
       terser(),
     ],
   },
   {
-    input: "dist/esm/types/Switch.d.ts",
-    output: [{ file: "dist/index.d.ts", format: "esm" }],
-    plugins: [dts()],
+    input: "src/example/index.tsx",
+    output: [
+      {
+        file: "example/bundle.js",
+        format: "iife",
+        sourcemap: true,
+        globals: {
+          'react': 'React',
+          'react-dom': 'ReactDOM'
+        }
+      }
+    ],
+    plugins: [
+      peerDepsExternal(),
+      resolve(),
+      commonjs(),
+      typescript({ tsconfig: "./tsconfig.json" }),
+      postcss({ extract: true }),
+      terser(),
+    ],
+  },
+  {
+    input: "dist/types/index.d.ts",
+    output: [{ file: "dist/index.d.ts", format: "es" }],
+    plugins: [dts({ allowJs: true })],
     external: [/\.(css|less|scss)$/],
   },
 ];
